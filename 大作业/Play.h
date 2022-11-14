@@ -27,6 +27,9 @@ int Play() {
 	//生成背景
 	initgraph(X * 25, Y * 25);
 
+	HWND hWnd = GetHWnd();
+	SetWindowText(hWnd, "这是另一个普通的窗口名称 OwO");
+
 	//播放背景音乐
 	BGM2();
 

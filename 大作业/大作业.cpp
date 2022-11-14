@@ -216,6 +216,9 @@ int startUI() {
 	setbkcolor(WHITE);//背景颜色
 	cleardevice();//清空
 
+	HWND hWnd = GetHWnd();
+	SetWindowText(hWnd, "这只是一个普通的窗口名称 O-O");
+
 	IMAGE back;
 	loadimage(&back, "20.png", 650, 400);
 	drawAlpha(&back, 0, 0);
@@ -273,6 +276,9 @@ int finishUI(int points) {
 	initgraph(650, 400);
 	setbkcolor(WHITE);
 	cleardevice();
+
+	HWND hWnd = GetHWnd();
+	SetWindowText(hWnd, "猜猜这是不是最后一个普通的窗口名称 ^o^");
 
 	BGM5();
 
