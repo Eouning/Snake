@@ -1,5 +1,7 @@
-﻿// 大作业.cpp : 定义应用程序的入口点。
-//
+﻿//写在前面：
+//       本程序所用的音乐仅做学习使用
+//       本程序所用图片部分为作者像素画，部分为AI绘成
+//       如若造成侵权，立刻删除
 
 #include "Play.h"
 #include "framework.h"
@@ -200,7 +202,7 @@ void button(int x, int y, int w, int h, char text[]) {
 	fillroundrect(x, y, x + w, y + h, 10, 10);
 
 	//居中显示按钮文字
-	settextstyle(25, 0, "宋体");
+	settextstyle(25, 0, "黑体");
 	setbkmode(TRANSPARENT);
 	double width = textwidth(text) / 2.0;
 	double heigh = textheight(text) / 2.0;
@@ -214,23 +216,26 @@ int startUI() {
 	setbkcolor(WHITE);//背景颜色
 	cleardevice();//清空
 
+	IMAGE back;
+	loadimage(&back, "20.png", 650, 400);
+	drawAlpha(&back, 0, 0);
+
 	BGM1();
 
 	//生成标题
 	char title[] = "贪吃蛇~~~";//标题显示的文字
 	settextcolor(BLACK);//标题文字的颜色
-	settextstyle(50, 0, "楷体");//标题文字的字体
+	settextstyle(50, 0, "黑体");//标题文字的字体
 	setbkmode(TRANSPARENT);//让标题字体背景透明
-	int width = textwidth(title) / 2;//使得标题居中显示
-	outtextxy(325 - width, 70, title);
+	outtextxy(50, 70, title);
 
 	//生成开始游戏按钮
 	char buttonText1[] = "开始游戏";
-	button(100, 230, 100, 30, buttonText1);
+	button(50, 230, 100, 30, buttonText1);
 
 	//生成退出游戏按钮
 	char buttonText2[] = "退出游戏";
-	button(400, 230, 100, 30, buttonText2);
+	button(450, 230, 100, 30, buttonText2);
 
 	//针对鼠标点击的按键进行相应的事件
 	//定义一个鼠标事件的"对象"(便于理解)
@@ -242,12 +247,12 @@ int startUI() {
 			{
 			case WM_LBUTTONDOWN:
 				//如果按下了开始游戏按钮
-				if (msg.x >= 100 && msg.x <= 200 && msg.y >= 230 && msg.y <= 260) {
+				if (msg.x >= 50 && msg.x <= 150 && msg.y >= 230 && msg.y <= 260) {
 					BGM3();
 					return Play();//以Play函数的返回值作为startUI函数的返回值，以判定在游戏结束后玩家是否选择回到开始界面
 				}
 				//如果按下了退出游戏按钮
-				else if (msg.x >= 400 && msg.x <= 500 && msg.y >= 230 && msg.y <= 260) {
+				else if (msg.x >= 450 && msg.x <= 550 && msg.y >= 230 && msg.y <= 260) {
 					BGM3();
 					Sleep(1000);
 					exit(0);
@@ -291,13 +296,17 @@ int finishUI(int points) {
 		outtextxy(325 - width, 70, title);
 	}
 
+	IMAGE back;
+	loadimage(&back, "21.png", 650, 400);
+	drawAlpha(&back, 0, 200);
+
 	int width = textwidth(words) / 2;
 	settextcolor(BLACK);
-	settextstyle(25, 0, "楷体");
+	settextstyle(25, 0, "黑体");
 	setbkmode(TRANSPARENT);
 	width = textwidth(words) / 2;
-	outtextxy(100 - width, 300, words);
-	outtextxy(100 + width, 300, score);
+	outtextxy(100 - width, 30, words);
+	outtextxy(100 + width, 30, score);
 
 	char buttonText2[] = "退出游戏";
 	button(400, 230, 100, 30, buttonText2);
@@ -332,6 +341,7 @@ int finishUI(int points) {
 }
 
 //BGM
+//开始界面背景音乐
 void BGM1() {
 	//在开始时关闭本音乐，防止无法二次播放
 	mciSendString("close 01", NULL, 0, NULL);
@@ -340,6 +350,7 @@ void BGM1() {
 	mciSendString("play 01", 0, 0, 0);
 }
 
+//按钮按下音效
 void BGM3() {
 	mciSendString("close 01", NULL, 0, NULL);
 	mciSendString("close 05", NULL, 0, NULL);
@@ -349,6 +360,7 @@ void BGM3() {
 	mciSendString("play 03", 0, 0, 0);
 }
 
+//死亡音效
 void BGM5() {
 	mciSendString("close 02", NULL, 0, NULL);
 	mciSendString("close 05", NULL, 0, NULL);

@@ -20,8 +20,8 @@ void Movement(Snake** pHead);//让蛇移动
 int makeMeat(int count, int Meat[2], Snake* Head);//创造肉
 int die(Snake* Head);//对死亡的判定
 void drawAlpha(IMAGE* picture, int  picture_x, int picture_y); //图片透明背景化,x为要载入图片的X坐标，y为Y坐标
-void BGM2();
-void BGM4();
+void BGM2();//游戏背景音乐
+void BGM4();//吃肉音效
 
 int Play() {
 	//生成背景
@@ -74,6 +74,7 @@ int Play() {
 
 		count++;
 
+		//刷新频率，100/1000秒一次
 		Sleep(100);
 
 	}
@@ -82,6 +83,7 @@ int Play() {
 
 }
 
+//移动函数，把头指针变为原来的尾部地址，再将现在的头指针所对应结构体内参数进行移动
 void Movement(Snake** pHead) {
 	*pHead = (*pHead)->Before;
 	switch ((*pHead)->Next->direction)

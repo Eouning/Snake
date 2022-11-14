@@ -3,7 +3,7 @@
 //定义一个表示朝向的枚举类型
 enum Direction { 上, 下, 左, 右 };
 
-//定义一个存储蛇的链表，
+//定义一个存储蛇的链表，在游戏中的表现形式为“衔尾蛇”
 typedef struct _none {
 	enum Direction direction;//存储朝向的数据，以方便进一步将蛇由方块换成图片时，图片的选择
 	int x;
