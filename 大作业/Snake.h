@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 //定义一个表示朝向的枚举类型
 enum Direction { 上, 下, 左, 右 };
