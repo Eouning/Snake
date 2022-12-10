@@ -1,19 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <windows.h>
-#include <math.h>
-#include <time.h>
-#include <graphics.h>
-#include <easyx.h>
-#include <string.h>
-#include <conio.h>
-#include "Snake.h"//为了代码的美观性，用名为Snake的头文件存储Snake链表的代码即相关的操作函数
-#include <mmsystem.h>
-#pragma comment(lib,"winmm.lib")
-
-//表示地图范围，共25*25格，每格25*25像素。
-#define X 25
-#define Y 25
+#include"寻路.h"
 
 void Show(Snake* Head, int Meat[2]);//将蛇和肉打印在屏幕上
 void Movement(Snake** pHead);//让蛇移动
