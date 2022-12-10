@@ -1,5 +1,4 @@
-#include"寻路.h"
-
+#include "AI.h"
 void Show(Snake* Head, int Meat[2]);//将蛇和肉打印在屏幕上
 void Movement(Snake** pHead);//让蛇移动
 int makeMeat(int count, int Meat[2], Snake* Head,int AI);//创造肉
@@ -51,7 +50,7 @@ int Play(int AI) {
 		}
 		else
 		{
-
+			Head->direction = Change_Direction(Head, Meat);
 		}
 		
 

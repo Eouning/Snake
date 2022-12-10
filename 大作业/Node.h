@@ -73,9 +73,13 @@ void ListAppend(List** plist, Node* pnode) {
 void ListDelete(List** plist) {
 	List* p = *plist;
 	*plist = p->next;
-	(*plist)->before = NULL;
 
 	if (*plist) {
+		(*plist)->before = NULL;
+		free(p);
+	}
+	else
+	{
 		free(p);
 	}
 }

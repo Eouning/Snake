@@ -33,12 +33,6 @@ void 寻路(int startX, int startY, int finishX, int finishY) {
 
 	while (true)
 	{
-		if (OpenList == NULL) {
-			//找不到，该程序下一般不可能。
-			printf("111\n");
-			getchar();
-		}
-
 		Node* pCurrent = OpenList->pnode;
 
 		ListAppend(&CloseList, pCurrent);
@@ -122,6 +116,12 @@ void 寻路(int startX, int startY, int finishX, int finishY) {
 			}
 		}
 		ListDelete(&OpenList);
+
+		//找不到的情况
+		if (OpenList == NULL) {
+			getchar();
+		}
+
 		Sort(&OpenList);
 	}
 
