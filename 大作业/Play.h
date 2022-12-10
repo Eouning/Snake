@@ -82,6 +82,7 @@ int Play() {
 
 	}
 
+	Snake_damage(Head);
 	return points;
 
 }

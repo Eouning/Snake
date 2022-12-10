@@ -33,6 +33,12 @@
     <ClInclude Include="Snake.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="寻路.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="大作业.cpp">

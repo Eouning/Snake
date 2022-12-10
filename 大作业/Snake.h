@@ -34,3 +34,15 @@ void Snake_append(Snake** pHead, int x, int y, enum Direction direction) {
 	}
 
 }
+
+void Snake_damage(Snake* Head) {
+	Snake* p1 = Head->Next;
+	Snake* p2;
+	while (p1!=Head)
+	{
+		p2 = p1;
+		p1 = p1->Next;
+		free(p2);
+	}
+	free(p1);
+}
