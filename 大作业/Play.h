@@ -2,13 +2,13 @@
 
 void Show(Snake* Head, int Meat[2]);//将蛇和肉打印在屏幕上
 void Movement(Snake** pHead);//让蛇移动
-int makeMeat(int count, int Meat[2], Snake* Head);//创造肉
+int makeMeat(int count, int Meat[2], Snake* Head,int AI);//创造肉
 int die(Snake* Head);//对死亡的判定
 void drawAlpha(IMAGE* picture, int  picture_x, int picture_y); //图片透明背景化,x为要载入图片的X坐标，y为Y坐标
 void BGM2();//游戏背景音乐
 void BGM4();//吃肉音效
 
-int Play() {
+int Play(int AI) {
 	//生成背景
 	initgraph(X * 25, Y * 25);
 
@@ -32,21 +32,28 @@ int Play() {
 
 	while (die(Head) == 0) {
 
-		count = makeMeat(count, Meat, Head);
+		count = makeMeat(count, Meat, Head,AI);
 
-		//蛇头朝向的改变
-		if (GetAsyncKeyState(65) & 0x8000 && Head->direction != 右) {
-			Head->direction = 左;
+		if (AI == 0) {
+			//蛇头朝向的改变
+			if (GetAsyncKeyState(65) & 0x8000 && Head->direction != 右) {
+				Head->direction = 左;
+			}
+			if (GetAsyncKeyState(68) & 0x8000 && Head->direction != 左) {
+				Head->direction = 右;
+			}
+			if (GetAsyncKeyState(87) & 0x8000 && Head->direction != 下) {
+				Head->direction = 上;
+			}
+			if (GetAsyncKeyState(83) & 0x8000 && Head->direction != 上) {
+				Head->direction = 下;
+			}
 		}
-		if (GetAsyncKeyState(68) & 0x8000 && Head->direction != 左) {
-			Head->direction = 右;
+		else
+		{
+
 		}
-		if (GetAsyncKeyState(87) & 0x8000 && Head->direction != 下) {
-			Head->direction = 上;
-		}
-		if (GetAsyncKeyState(83) & 0x8000 && Head->direction != 上) {
-			Head->direction = 下;
-		}
+		
 
 		Movement(&Head);
 
@@ -302,9 +309,9 @@ int die(Snake* Head) {
 	return 0;
 }
 
-int makeMeat(int count, int Meat[2], Snake* Head) {
+int makeMeat(int count, int Meat[2], Snake* Head,int AI) {
 	//每40次刷新，也就是0.1*40秒后，生成一块肉；或者肉被吃完后立刻生成肉
-	if (count % 40 == 0 or Meat[0] == -1) {
+	if (count % (40+AI*100000) == 0 or Meat[0] == -1) {
 		if (Meat[0] == -1) {
 			count = 1;//吃肉后刷新间隔时间
 		}

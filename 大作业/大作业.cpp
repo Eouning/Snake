@@ -236,6 +236,10 @@ int startUI() {
 	char buttonText1[] = "开始游戏";
 	button(50, 230, 100, 30, buttonText1);
 
+	//生成开始游戏按钮
+	char buttonText3[] = "自动吃食";
+	button(250, 330, 100, 30, buttonText3);
+
 	//生成退出游戏按钮
 	char buttonText2[] = "退出游戏";
 	button(450, 230, 100, 30, buttonText2);
@@ -252,13 +256,19 @@ int startUI() {
 				//如果按下了开始游戏按钮
 				if (msg.x >= 50 && msg.x <= 150 && msg.y >= 230 && msg.y <= 260) {
 					BGM3();
-					return Play();//以Play函数的返回值作为startUI函数的返回值，以判定在游戏结束后玩家是否选择回到开始界面
+					return Play(0);//以Play函数的返回值作为startUI函数的返回值，以判定在游戏结束后玩家是否选择回到开始界面
 				}
 				//如果按下了退出游戏按钮
-				else if (msg.x >= 450 && msg.x <= 550 && msg.y >= 230 && msg.y <= 260) {
+				else if (msg.x >= 450 && msg.x <= 550 && msg.y >= 230 && msg.y <= 260) 
+				{
 					BGM3();
 					Sleep(1000);
 					exit(0);
+				}
+				else if (msg.x >= 250 && msg.x <= 350 && msg.y >= 330 && msg.y <= 360)
+				{
+					BGM3();
+					return Play(1);//以Play函数的返回值作为startUI函数的返回值，以判定在游戏结束后玩家是否选择回到开始界面
 				}
 				break;
 			default:
