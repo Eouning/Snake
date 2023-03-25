@@ -226,22 +226,22 @@ int startUI() {
 	BGM1();
 
 	//生成标题
-	char title[] = "贪吃蛇~~~";//标题显示的文字
+	char title[] = "小青求佛记";//标题显示的文字
 	settextcolor(BLACK);//标题文字的颜色
 	settextstyle(50, 0, "黑体");//标题文字的字体
 	setbkmode(TRANSPARENT);//让标题字体背景透明
-	outtextxy(50, 70, title);
+	outtextxy(30, 70, title);
 
 	//生成开始游戏按钮
-	char buttonText1[] = "开始游戏";
+	char buttonText1[] = "电子木鱼";
 	button(50, 230, 100, 30, buttonText1);
 
 	//生成开始游戏按钮
-	char buttonText3[] = "自动吃食";
+	char buttonText3[] = "自动求佛";
 	button(250, 330, 100, 30, buttonText3);
 
 	//生成退出游戏按钮
-	char buttonText2[] = "退出游戏";
+	char buttonText2[] = "还俗";
 	button(450, 230, 100, 30, buttonText2);
 
 	//针对鼠标点击的按键进行相应的事件
@@ -293,7 +293,7 @@ int finishUI(int points) {
 	BGM5();
 
 	char title[] = "YOU DIED";
-	char words[] = "你的得分是:";
+	char words[] = "功德增加了:";
 
 	char score[4];
 	score[2] = points % 10 + 48;

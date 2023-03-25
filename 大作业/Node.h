@@ -9,10 +9,6 @@
 #pragma comment(lib,"winmm.lib")
 #include"Snake.h"
 
-//表示地图范围，共25*25格，每格25*25像素。
-#define X 25
-#define Y 25
-
 enum 性质类型
 {
 	普通,
@@ -113,4 +109,32 @@ void Sort(List** list) {
 	min->pnode = (*list)->pnode;
 	(*list)->pnode = pno;
 }
+
+//根据f将列表中最大的放在第一位
+void Sort_Max(List** list) {
+	List* p = *list;
+	List* max = *list;
+	while (p)
+	{
+		if (max->pnode->f < p->pnode->f) {
+			max = p;
+		}
+		p = p->next;
+	}
+
+	Node* pno = max->pnode;
+	max->pnode = (*list)->pnode;
+	(*list)->pnode = pno;
+
+	//检查
+	printf("-----------\n");
+	p = *list;
+	while (p)
+	{
+		printf("%d\n", p->pnode->f);
+		p = p->next;
+	}
+	printf("-----------\n");
+}
+
 

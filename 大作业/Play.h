@@ -14,6 +14,10 @@ int Play(int AI) {
 	HWND hWnd = GetHWnd();
 	SetWindowText(hWnd, "这是另一个普通的窗口名称 OwO");
 
+	IMAGE back;
+	loadimage(&back, "19.png", 25 * X, 25 * Y);
+	putimage(0, 0, &back);
+
 	//播放背景音乐
 	BGM2();
 
@@ -21,9 +25,9 @@ int Play(int AI) {
 	Snake* Head = (Snake*)malloc(sizeof(Snake));
 	Head->Before = NULL;
 	Head->Next = NULL;
-	Snake_append(&Head, 10, 10, 下);
-	Snake_append(&Head, 10, 9, 下);
-	Snake_append(&Head, 10, 8, 下);
+	Snake_append(&Head, 5, 5, 下);
+	Snake_append(&Head, 5, 4, 下);
+	Snake_append(&Head, 5, 3, 下);
 	int points = 0;
 
 	int Meat[2];
@@ -50,291 +54,311 @@ int Play(int AI) {
 		}
 		else
 		{
+			if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
+				return points+2;
+			}
 			Head->direction = Change_Direction(Head, Meat);
 		}
 		
-
+		IMAGE back_piece;
+		loadimage(&back_piece, "map_piece.png", 25, 25 );
+		putimage(Head->Before->x*25, Head->Before->y*25, &back_piece);
+		
 		Movement(&Head);
-
 		//如果吃到肉了，蛇就增长
 		if (Head->x == Meat[0] && Head->y == Meat[1]) {
+
+			IMAGE back_piece;
+			loadimage(&back_piece, "map_piece.png", 25, 25);
+			putimage(Meat[0] * 25, Meat[1] * 25, &back_piece);
+
 			Meat[0] = -1;
 			Snake_append(&Head, Head->Before->x, Head->Before->y, Head->Before->direction);
 			points++;
 			BGM4();
 		}
 
+		
+
 		Show(Head,Meat);
 
 		count++;
 
-		//刷新频率，100/1000秒一次
-		Sleep(100);
+		//刷新频率，x/1000秒一次
+		Sleep(55);
 
 	}
 
 	Snake_damage(Head);
-	return points;
+	return points + 2;
 
-}
-
-//移动函数，把头指针变为原来的尾部地址，再将现在的头指针所对应结构体内参数进行移动
-void Movement(Snake** pHead) {
-	*pHead = (*pHead)->Before;
-	switch ((*pHead)->Next->direction)
-	{
-	case 上:
-		(*pHead)->y = (*pHead)->Next->y - 1;
-		(*pHead)->x = (*pHead)->Next->x;
-		(*pHead)->direction = (*pHead)->Next->direction;
-		break;
-	case 下:
-		(*pHead)->y = (*pHead)->Next->y + 1;
-		(*pHead)->x = (*pHead)->Next->x;
-		(*pHead)->direction = (*pHead)->Next->direction;
-		break;
-	case 左:
-		(*pHead)->x = (*pHead)->Next->x - 1;
-		(*pHead)->y = (*pHead)->Next->y;
-		(*pHead)->direction = (*pHead)->Next->direction;
-		break;
-	case 右:
-		(*pHead)->x = (*pHead)->Next->x + 1;
-		(*pHead)->y = (*pHead)->Next->y;
-		(*pHead)->direction = (*pHead)->Next->direction;
-		break;
-	default:
-		break;
-	}
 }
 
 void Show(Snake* Head, int Meat[2]) {
 	IMAGE pc;
+	IMAGE ph;
 
-	IMAGE back;
-	loadimage(&back, "19.png", 625, 625);
-	putimage(0, 0, &back);
-
-	//肉
-	loadimage(&pc, "18.png", 25, 25);
-	drawAlpha(&pc, Meat[0] * 25, Meat[1] * 25);
+	IMAGE back_piece;
+	loadimage(&back_piece, "map_piece.png", 25, 25);
+	putimage(Head->x * 25, Head->y * 25, &back_piece);
+	putimage(Head->Next->x * 25, Head->Next->y* 25, &back_piece);
+	putimage(Head->Before->x* 25, Head->Before->y * 25, &back_piece);
 
 	//头
 	switch (Head->direction)
 	{
 	case 上:
-		loadimage(&pc, "00.png", 25, 25);
-		drawAlpha(&pc, (Head->x) * 25, (Head->y) * 25);
+		loadimage(&ph, "00.png", 25, 25);
+		drawAlpha(&ph, (Head->x) * 25, (Head->y) * 25);
 		break;
 	case 右:
-		loadimage(&pc, "01.png", 25, 25);
-		drawAlpha(&pc, (Head->x) * 25, (Head->y) * 25);
+		loadimage(&ph, "01.png", 25, 25);
+		drawAlpha(&ph, (Head->x) * 25, (Head->y) * 25);
 		break;
 	case 下:
-		loadimage(&pc, "02.png", 25, 25);
-		drawAlpha(&pc, (Head->x) * 25, (Head->y) * 25);
+		loadimage(&ph, "02.png", 25, 25);
+		drawAlpha(&ph, (Head->x) * 25, (Head->y) * 25);
 		break;
 	case 左:
-		loadimage(&pc, "03.png", 25, 25);
-		drawAlpha(&pc, (Head->x) * 25, (Head->y) * 25);
+		loadimage(&ph, "03.png", 25, 25);
+		drawAlpha(&ph, (Head->x) * 25, (Head->y) * 25);
 		break;
 	default:
 		break;
 	}
-	Snake* p = Head->Next;
 
+	Snake* p = Head->Next;
 	//身
-	while (p->Next != Head) {
-		if (p->Before->direction == p->Next->direction && p->direction==p->Before->direction|| p->Next->direction == p->direction) {
-			switch (p->direction)
-			{
-			case 上:
-				loadimage(&pc, "04.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-				break;
-			case 右:
-				loadimage(&pc, "05.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-				break;
-			case 下:
-				loadimage(&pc, "04.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-				break;
-			case 左:
-				loadimage(&pc, "05.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-				break;
-			default:
-				break;
-			}
+	if (p->Before->direction == p->Next->direction && p->direction == p->Before->direction || p->Next->direction == p->direction) {
+		switch (p->direction)
+		{
+		case 上:
+			loadimage(&pc, "04.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+			break;
+		case 右:
+			loadimage(&pc, "05.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+			break;
+		case 下:
+			loadimage(&pc, "04.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+			break;
+		case 左:
+			loadimage(&pc, "05.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+			break;
+		default:
+			break;
 		}
-		else {
-			if (p->Before->direction == 上 && p->Next->direction == 右 ) {
-				loadimage(&pc, "10.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 上 && p->Next->direction == 左) {
-				loadimage(&pc, "11.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 下 && p->Next->direction == 右) {
-				loadimage(&pc, "12.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 下 && p->Next->direction == 左) {
-				loadimage(&pc, "13.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 左 && p->Next->direction == 上) {
-				loadimage(&pc, "14.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 左 && p->Next->direction == 下) {
-				loadimage(&pc, "15.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 右 && p->Next->direction == 上) {
-				loadimage(&pc, "16.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 右 && p->Next->direction == 下) {
-				loadimage(&pc, "17.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 左 && p->Next->direction == 右 && p->direction==下) {
-				loadimage(&pc, "14.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 左 && p->Next->direction == 右 && p->direction == 上) {
-				loadimage(&pc, "15.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 右 && p->Next->direction == 左 && p->direction == 下) {
-				loadimage(&pc, "13.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 右 && p->Next->direction == 左 && p->direction == 上) {
-				loadimage(&pc, "11.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 上 && p->Next->direction == 下 && p->direction == 左) {
-				loadimage(&pc, "10.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 上 && p->Next->direction == 下 && p->direction == 右) {
-				loadimage(&pc, "11.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 下 && p->Next->direction == 上 && p->direction == 左) {
-				loadimage(&pc, "12.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 下 && p->Next->direction == 上 && p->direction == 右) {
-				loadimage(&pc, "13.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 上 && p->Next->direction == 上 && p->direction == 左) {
-				loadimage(&pc, "12.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 上 && p->Next->direction == 上 && p->direction == 右) {
-				loadimage(&pc, "13.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 下 && p->Next->direction == 下 && p->direction == 左) {
-				loadimage(&pc, "15.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 下 && p->Next->direction == 下 && p->direction == 右) {
-				loadimage(&pc, "17.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 右 && p->Next->direction == 右 && p->direction == 上) {
-				loadimage(&pc, "10.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 右 && p->Next->direction == 右 && p->direction == 下) {
-				loadimage(&pc, "12.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 左 && p->Next->direction == 左 && p->direction == 上) {
-				loadimage(&pc, "17.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
-			if (p->Before->direction == 左 && p->Next->direction == 左 && p->direction == 下) {
-				loadimage(&pc, "16.png", 25, 25);
-				drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
-			}
+	}
+	else {
+		if (p->Before->direction == 上 && p->Next->direction == 右) {
+			loadimage(&pc, "10.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
 		}
-		p = p->Next;
+		if (p->Before->direction == 上 && p->Next->direction == 左) {
+			loadimage(&pc, "11.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 下 && p->Next->direction == 右) {
+			loadimage(&pc, "12.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 下 && p->Next->direction == 左) {
+			loadimage(&pc, "13.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 左 && p->Next->direction == 上) {
+			loadimage(&pc, "14.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 左 && p->Next->direction == 下) {
+			loadimage(&pc, "15.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 右 && p->Next->direction == 上) {
+			loadimage(&pc, "16.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 右 && p->Next->direction == 下) {
+			loadimage(&pc, "17.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 左 && p->Next->direction == 右 && p->direction == 下) {
+			loadimage(&pc, "14.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 左 && p->Next->direction == 右 && p->direction == 上) {
+			loadimage(&pc, "15.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 右 && p->Next->direction == 左 && p->direction == 下) {
+			loadimage(&pc, "13.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 右 && p->Next->direction == 左 && p->direction == 上) {
+			loadimage(&pc, "11.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 上 && p->Next->direction == 下 && p->direction == 左) {
+			loadimage(&pc, "10.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 上 && p->Next->direction == 下 && p->direction == 右) {
+			loadimage(&pc, "11.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 下 && p->Next->direction == 上 && p->direction == 左) {
+			loadimage(&pc, "12.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 下 && p->Next->direction == 上 && p->direction == 右) {
+			loadimage(&pc, "13.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 上 && p->Next->direction == 上 && p->direction == 左) {
+			loadimage(&pc, "12.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 上 && p->Next->direction == 上 && p->direction == 右) {
+			loadimage(&pc, "13.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 下 && p->Next->direction == 下 && p->direction == 左) {
+			loadimage(&pc, "15.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 下 && p->Next->direction == 下 && p->direction == 右) {
+			loadimage(&pc, "17.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 右 && p->Next->direction == 右 && p->direction == 上) {
+			loadimage(&pc, "10.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 右 && p->Next->direction == 右 && p->direction == 下) {
+			loadimage(&pc, "12.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 左 && p->Next->direction == 左 && p->direction == 上) {
+			loadimage(&pc, "17.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
+		if (p->Before->direction == 左 && p->Next->direction == 左 && p->direction == 下) {
+			loadimage(&pc, "16.png", 25, 25);
+			drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		}
 	}
 
+	IMAGE p2;
 	//尾巴
-	switch (p->direction)
+	switch (Head->Before->direction)
 	{
 	case 上:
-		loadimage(&pc, "06.png", 25, 25);
-		drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		loadimage(&p2, "06.png", 25, 25);
+		drawAlpha(&p2, (Head->Before->x) * 25, (Head->Before->y) * 25);
 		break;
 	case 右:
-		loadimage(&pc, "07.png", 25, 25);
-		drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		loadimage(&p2, "07.png", 25, 25);
+		drawAlpha(&p2, (Head->Before->x) * 25, (Head->Before->y) * 25);
 		break;
 	case 下:
-		loadimage(&pc, "08.png", 25, 25);
-		drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		loadimage(&p2, "08.png", 25, 25);
+		drawAlpha(&p2, (Head->Before->x) * 25, (Head->Before->y) * 25);
 		break;
 	case 左:
-		loadimage(&pc, "09.png", 25, 25);
-		drawAlpha(&pc, (p->x) * 25, (p->y) * 25);
+		loadimage(&p2, "09.png", 25, 25);
+		drawAlpha(&p2, (Head->Before->x) * 25, (Head->Before->y) * 25);
 		break;
 	default:
 		break;
 	}
-}
-
-int die(Snake* Head) {
-	//出界或咬到自己就死亡
-	if (Head->x < 1 || Head->x >X - 2 || Head->y < 1 || Head->y >Y - 2) {
-		return 1;
-	}
-	Snake* p = Head;
-	while (p->Next != Head) {
-		if (p->Next->x == Head->x && p->Next->y == Head->y) {
-			return 1;
-		}
-		p = p->Next;
-	}
-	return 0;
 }
 
 int makeMeat(int count, int Meat[2], Snake* Head,int AI) {
 	//每40次刷新，也就是0.1*40秒后，生成一块肉；或者肉被吃完后立刻生成肉
-	if (count % (40+AI*100000) == 0 or Meat[0] == -1) {
+	if (count % (40+AI*50000*(X+Y)) == 0 or Meat[0] == -1) {
 		if (Meat[0] == -1) {
 			count = 1;//吃肉后刷新间隔时间
 		}
+		else
+		{
+			IMAGE back_piece;
+			loadimage(&back_piece, "map_piece.png", 25, 25);
+			putimage(Meat[0] * 25, Meat[1] * 25, &back_piece);
+		}
 
-	Rand:
-		srand((unsigned)time(NULL));
-		Meat[0] = rand() % (X-2)+1;
-		Meat[1] = rand() % (Y-2)+1;
+		Node map[X][Y];
+		List* list=NULL;
+		int num = 0;
+		for (int i = 1; i < X-1; i++) {
+			for (int j = 1; j < Y-1; j++) {
+				map[i][j].x = i;
+				map[i][j].y = j;
+				map[i][j].f = 0;
+			}
+		}
 
 		Snake* p = Head;
-		while (p->Next !=Head) {
-			//防止肉生成在蛇身上
-			if (p->x == Meat[0] && p->y == Meat[1] || p->Next->x == Meat[0] && p->Next->y == Meat[1])
-			{
-				goto Rand;
-			}
+		while (p->Next!=Head)
+		{
+			map[p->x][p->y].f = 1;
 			p = p->Next;
 		}
-		if (p->x == Meat[0] && p->y == Meat[1] || p->Next->x == Meat[0] && p->Next->y == Meat[1])
-		{
-			goto Rand;
+		map[p->x][p->y].f = 1;
+
+		for (int i = 1; i < X - 1; i++) {
+			for (int j = 1; j < Y - 1; j++) {
+				if (map[i][j].f == 0) {
+					num++;
+					ListAppend(&list, &map[i][j]);
+				}
+			}
 		}
 
+		srand((unsigned)time(NULL));
+		if (num == 1 ) {
+			Meat[0] = list->pnode->x;
+			Meat[1] = list->pnode->y;
+
+			IMAGE pc;
+			//肉
+			loadimage(&pc, "18.png", 25, 25);
+			drawAlpha(&pc, Meat[0] * 25, Meat[1] * 25);
+		}
+		else if (num==0)
+		{
+			Meat[0] = 0;
+			Meat[1] = 0;
+		}
+		else
+		{
+			int x = rand() % (num - 1);
+			x = rand() % (num - 1);
+			x = rand() % (num - 1);
+			x = rand() % (num - 1);
+			x = rand() % (num - 1);
+			x = rand() % (num - 1);
+			x = rand() % (num - 1);
+			x = rand() % (num - 1);
+			x = rand() % (num - 1);
+
+			List* meat = list;
+			for (int i = 0; i < x; i++) {
+				meat = meat->next;
+			}
+			Meat[0] = meat->pnode->x;
+			Meat[1] = meat->pnode->y;
+
+			IMAGE pc;
+			//肉
+			loadimage(&pc, "18.png", 25, 25);
+			drawAlpha(&pc, Meat[0] * 25, Meat[1] * 25);
+		}
+		
 	}
+
 	return count;
 }
 
@@ -385,6 +409,6 @@ void BGM2() {
 void BGM4() {
 	mciSendString("close 04", NULL, 0, NULL);
 	//打开音乐，播放音乐
-	mciSendString("open ./04eat.wav alias 04", 0, 0, 0);
+	mciSendString("open ./dianzimuyu.mp3 alias 04", 0, 0, 0);
 	mciSendString("play 04", 0, 0, 0);
 }
